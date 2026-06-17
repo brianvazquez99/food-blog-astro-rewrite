@@ -1,0 +1,215 @@
+---
+import type { GetStaticPaths } from "astro";
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import astroConfig from "../../astro.config.mjs";
+
+export const getStaticPaths = (async () => {
+  const blogsPromise = await fetch(
+    `http://mailanhomebakery.local/wp-json/wp/v2/recipe`,
+  );
+  const blogsJson = await blogsPromise.json();
+  console.log("blogs", blogsJson);
+  const paths = await Promise.all(
+    blogsJson.map(async (blog: any) => {
+      if (blog.featured_media != null) {
+        const featuredImagePromise = await fetch(
+          `http://mailanhomebakery.local/wp-json/wp/v2/media/${blog.featured_media}`,
+        );
+        const featuredImageJson = await featuredImagePromise.json();
+        console.log(featuredImageJson.guid?.rendered);
+        if (featuredImageJson) {
+          blog["image_url"] = featuredImageJson.guid?.rendered;
+        }
+      }
+
+      return {
+        params: { slug: blog.slug },
+        props: {
+          title: blog.title.rendered,
+          content: blog.content.rendered,
+          image_url: blog.image_url,
+          date_published: blog.date,
+          instructions: blog.acf.instructions,
+          ingredients: blog.acf.ingredients,
+          prep_time: blog.acf.prep_time,
+          cook_time: blog.acf.cook_time,
+        },
+      };
+    }),
+  );
+  console.log("paths", paths);
+  return paths.filter((path) => path.props.image_url != null);
+}) satisfies GetStaticPaths;
+
+const {
+  title,
+  content,
+  image_url,
+  date_published,
+  instructions,
+  ingredients,
+  prep_time,
+  cook_time,
+} = Astro.props;
+---
+
+
+<Layout>
+  <main class="flex flex-col items-center">
+    <div class="container mx-auto">
+      <article class="w-full" itemscope itemtype="https://schema.org/Article">
+        <h1
+          id="title"
+          class="title text-center text-4xl my-3"
+          itemprop="headline"
+          set:html={title}
+        />
+        <div id="thumbnail" class="flex justify-center">
+          <Image
+            fetchpriority="high"
+            src={image_url}
+            alt={title + " thumbnail"}
+            class="shadow rounded max-w-full h-auto"
+            itemprop="image"
+            height="500"
+            width="500"
+          />
+        </div>
+
+        <div class="flex justify-center my-2">
+          <button
+            class="hover:cursor-pointer rounded-lg bg-[#E4B52E] font-semibold"
+          >
+            <a
+              href="#recipe"
+              class="flex gap-1 items-center text-[#6E3E6F] title p-2"
+              >Jump To Recipe <svg
+                fill="#6E3E6F"
+                xmlns="http://www.w3.org/2000/svg"
+                width="15px"
+                height="15px"
+                viewBox="0 0 52 52"
+                enable-background="new 0 0 52 52"
+                xml:space="preserve"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                  <g>
+                    <path
+                      d="M40.6,30.4L27.1,44c-0.6,0.6-1.6,0.6-2.2,0L11.4,30.4c-0.6-0.6-0.6-1.6,0-2.2l2.2-2.2 c0.6-0.6,1.6-0.6,2.2,0l9.1,9.4c0.6,0.6,1.6,0.6,2.2,0l9.1-9.3c0.6-0.6,1.6-0.6,2.2,0l2.2,2.2C41.1,28.9,41.1,29.8,40.6,30.4z"
+                    >
+                    </path>
+                    <path
+                      d="M40.6,12.3L27.1,26.1c-0.6,0.6-1.6,0.6-2.2,0L11.4,12.3c-0.6-0.6-0.6-1.6,0-2.2l2.2-2.2 c0.6-0.6,1.6-0.6,2.2,0l9.1,9.4c0.6,0.6,1.6,0.6,2.2,0L36.2,8c0.6-0.6,1.6-0.6,2.2,0l2.2,2.2C41.1,10.8,41.1,11.8,40.6,12.3z"
+                    >
+                    </path>
+                  </g>
+                </g>
+              </svg>
+            </a>
+          </button>
+        </div>
+
+        <!-- <meta itemprop="datePublished" content={date}> -->
+        <meta
+          itemprop="image"
+          content="https://mailan-home-bakery.onrender.com/api/getThumbnail/{{ .ID }}"
+        />
+
+        <div id="body" class="flex flex-col gap-3">
+          <div class="w-full m-0 p-10" itemprop="articleBody">
+            <Fragment set:html={content} />
+          </div>
+          <div
+            id="recipe"
+            class="w-full rounded shadow border flex flex-col border-gray-300"
+          >
+            <div class="bg-[#E4B52E] rounded-t p-2 flex flex-col gap-2">
+              <span
+                class="text-2xl font-semibold text-[#2C1A0E]"
+                set:html={title}
+              />
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-1">
+                  <svg
+                    width="15px"
+                    height="15px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                        stroke="#000000"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                    </g></svg
+                  >
+                  <span class="text-[#2C1A0E]"> Prep</span>
+                  <span class="text-[#2C1A0E] font-semibold" set:html={prep_time} />
+                </div>
+                <div class="flex items-center gap-1">
+                  <svg
+                    width="15px"
+                    height="15px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M16 19.9972C14.8233 20.635 13.4571 21 12 21C7.58172 21 4 17.6439 4 13.504C4 12.3727 4.14916 11.3124 4.40527 10.3284M19.1761 16.8211C19.7036 15.8211 20 14.695 20 13.504C20 9.76257 17.9654 6.83811 16.562 5.44436C16.3017 5.18584 15.8683 5.30006 15.7212 5.63288C14.9742 7.3229 13.4178 9.75607 11.4286 9.75607C10.1975 9.92086 8.31688 8.86844 9.83483 3.64868C9.97151 3.17868 9.46972 2.80113 9.08645 3.11539C8.09335 3.92966 6.95052 5.1206 6 6.64741"
+                        stroke="#1C274C"
+                        stroke-width="1.5"
+                        stroke-linecap="round"></path>
+                    </g></svg
+                  >
+                  <span class="text-[#2C1A0E]"> Cook</span>
+                  <span class="text-[#2C1A0E] font-semibold" set:html={cook_time} />
+                </div>
+              </div>
+            </div>
+            <div class=" grid grid-cols-1 gap-2 md:grid-cols-2 flex-1">
+              <div class="flex flex-col p-2">
+                <span class="text-xl font-semibold text-slate-800">Ingredients</span>
+                <div class="cms-content" set:html={ingredients}>
+
+                </div>
+              </div>
+              <div class="flex flex-col p-2" >
+                <span class="text-xl font-semibold">Instructions</span>
+                 <div class="cms-content" set:html={instructions}>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </main>
+</Layout>
+                <style>
+
+ :global(.cms-content ul) {
+  list-style-type: disc !important;
+  padding-left: 1.5rem;
+}
+
+:global(.cms-content ol) {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem;
+}
+</style>

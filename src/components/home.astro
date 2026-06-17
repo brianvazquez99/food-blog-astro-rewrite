@@ -1,0 +1,71 @@
+---
+import { Image } from "astro:assets"
+
+
+const postsPromise = await fetch(`http://mailanhomebakery.local/wp-json/wp/v2/recipe?per_page=3`)
+const posts = await postsPromise.json()
+
+const postsWithImages = await Promise.all(
+    posts?.map(async (element:any) => {
+        if (element.featured_media != null) {
+            const featuredImagePromise = await fetch(`http://mailanhomebakery.local/wp-json/wp/v2/media/${element.featured_media}`)
+            const featuredImageJson = await featuredImagePromise.json()
+            console.log(featuredImageJson.guid?.rendered)
+            if (featuredImageJson) {
+                element["image_url"] = featuredImageJson.guid?.rendered
+
+            }
+
+        }
+        if (element.image_url != null) {
+
+            return element
+        }
+    })
+
+)
+const filteredPosts = postsWithImages.filter(element  => element != null)
+console.log(filteredPosts)
+---
+
+<div  style="background-color: #FAF3E3;" class="w-full">
+
+    <div class="container mx-auto py-5  w-full">
+
+    <div class="mb-2 w-full mt-10">
+      <div class="text-center mb-4">
+        <span class="text-4xl title text-[#6E3E6F] font-bold">FEATURED RECIPES</span>
+      </div>
+      <div class="flex flex-wrap gap-10 p-3 justify-center">
+        {
+            filteredPosts.map((post:any) => {
+                      return <a  href={'/'+ post.slug} class="flex items-center p-2 gap-2 flex-col hover:cursor-pointer transition-all h-full  rounded-lg">
+              <Image fetchpriority="high" class="h-[300px] w-[200px] object-cover rounded " src={post.image_url} height="200" width="200" alt="thumbnail"/>
+            <div class="text-center" style="width: 200px;">
+              <span class="text-xl p-4 title" set:html={post.title.rendered} ></span>
+            </div>
+          </a>
+            })
+        }
+
+      </div>
+
+
+
+
+
+    </div>
+
+    <div class="w-full h-1/2 flex flex-col px-4 gap-10 justify-center items-center">
+      <span class="text-5xl text-center text-[#6E3E6F] title"> Welcome to Mailan Home Bakery</span>
+      <p class="charcoal title text-center text-2xl">your virtual neighborhood bakery </p>
+      <button  class="py-3  hover:cursor-pointer px-8 rounded-lg bg-[#E4B52E]">
+        <a href="/recipes" class="text-[#6E3E6F] title  text-3xl">START BAKING</a>
+      </button>
+    </div>
+
+
+
+
+    </div>
+</div>
