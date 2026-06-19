@@ -34,6 +34,14 @@ const postsWithImages = await Promise.all(
 )
 const filteredPosts = postsWithImages.filter(element  => element != null)
 
+const categoriesPromise = await fetch('http://mailanhomebakery.local/wp-json/wp/v2/categories')
+const categories = await categoriesPromise.json()
+
+const mappedCat = categories.filter((cat) => cat.name != 'Uncategorized').map((cat) => {
+    return {id:cat.id, name:cat.name}
+})
+
+
 
 ---
 
@@ -41,5 +49,5 @@ const filteredPosts = postsWithImages.filter(element  => element != null)
 
 
 <Layout>
-<Recipes client:load posts={filteredPosts}/>
+<Recipes client:load categories={mappedCat} posts={filteredPosts}/>
 </Layout>

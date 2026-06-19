@@ -1,18 +1,56 @@
 <script lang="ts">
-import {fade, fly} from 'svelte/transition'
- let {posts} = $props();
+import { fly } from 'svelte/transition';
+ let {posts, categories} = $props();
 
 let searchString = $state<string>('')
+let categoryFilter = $state<{id:number, name:string}[]>([])
 
-const filteredPosts = $derived(
-  searchString
-    ? posts.filter((element:any) =>
+const filteredPosts = $derived.by(() => {
+  let filteredPosts = posts
+  if(searchString) {
+     filteredPosts = filteredPosts.filter((element:any) =>
         element.title.rendered
           .toLowerCase()
           .includes(searchString.toLowerCase())
       )
-    : posts
+  }
+  if(categoryFilter.length > 0 ) {
+
+    const catSet = new Set(categoryFilter.map((cat:any) => cat.id))
+    filteredPosts = filteredPosts.filter((element:any) => {
+      console.log(element)
+      const elementCatSet = new Set(element.categories)
+      const intersection = catSet.intersection(elementCatSet)
+      console.log('intersection', intersection.size)
+      if(intersection.size > 0) return element
+    })
+    console.log('posts', filteredPosts)
+  }
+
+  return filteredPosts
+
+}
 )
+
+
+function updateCategoryFilters(category:{id:number, name:string}) {
+  console.log('updating', category)
+
+  if(category.name === 'ALL') {
+    categoryFilter = []
+    return
+  }
+
+  if (categoryFilter.some((cat) => cat.name == category.name)) {
+    const index = categoryFilter.findIndex(el => el.name === category.name)
+    categoryFilter.splice(index, 1)
+  }
+  else {
+    categoryFilter.push(category)
+  }
+
+  console.log(categoryFilter)
+}
 
 
 
@@ -22,6 +60,13 @@ const filteredPosts = $derived(
 
 
 </script>
+
+<style>
+  .selected {
+  background-color: #E4B52E;
+  color: white;
+}
+</style>
 
  <div style="background-color: #FAF3E3;">
 
@@ -61,9 +106,14 @@ const filteredPosts = $derived(
 
           </div>
             <div class="flex flex-wrap justify-center gap-3 mt-6 px-4">
-              <button  class="px-6 py-2 rounded-full bg-gray-200  hover:cursor-pointer text-black hover:bg-[#6E3E6F] hover:text-white transition-colors">
+              <button class:selected={categoryFilter.length === 0} onclick={() => updateCategoryFilters({id:0, name:'ALL'})}   class="px-6 py-2 rounded-full bg-gray-200  hover:cursor-pointer text-black hover:bg-[#6E3E6F] hover:text-white transition-colors">
                 All
               </button>
+              {#each categories as category}
+               <button class:selected={categoryFilter.some((cat) => cat.name === category.name)} onclick={() => updateCategoryFilters(category)}  class="px-6 py-2 rounded-full bg-gray-200  hover:cursor-pointer text-black hover:bg-[#6E3E6F] hover:text-white transition-colors">
+                {category.name}
+              </button>
+              {/each}
               <!-- @for (cat of categories(); track $index) {
               <button (click)="updateFilter(cat)" [class.selected]="categoryFilter().includes(cat)" class="px-6 py-2 rounded-full bg-gray-200 hover:cursor-pointer text-black hover:bg-[#6E3E6F] hover:text-white transition-colors">
                 {{cat.toUpperCase()}}
