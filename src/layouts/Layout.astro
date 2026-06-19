@@ -40,6 +40,15 @@ const filteredPosts = postsWithImages.filter(element  => element != null)
 		<meta name="generator" content={Astro.generator} />
 		<title>Mailan Home Bakery</title>
 	</head>
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-STN7RFEJQF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-STN7RFEJQF');
+</script>
 	<body class="min-h-screen flex flex-col">
 		<Nav client:load posts={filteredPosts}/></Nav>
 		<main style="background-color: #FAF3E3;"  class="flex-1">
