@@ -7,13 +7,13 @@ import Layout from "../layouts/Layout.astro"
 import Recipes from "../components/recipes.svelte"
 
 
-const postsPromise = await fetch(`http://mailanhomebakery.local/wp-json/wp/v2/recipe`)
+const postsPromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts`)
 const posts = await postsPromise.json()
 
 const postsWithImages = await Promise.all(
     posts?.map(async (element:any) => {
         if (element.featured_media != null) {
-            const featuredImagePromise = await fetch(`http://mailanhomebakery.local/wp-json/wp/v2/media/${element.featured_media}`)
+            const featuredImagePromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${element.featured_media}`)
             const featuredImageJson = await featuredImagePromise.json()
             console.log(featuredImageJson.guid?.rendered)
             if (featuredImageJson && featuredImageJson.guid?.rendered) {
@@ -34,7 +34,7 @@ const postsWithImages = await Promise.all(
 )
 const filteredPosts = postsWithImages.filter(element  => element != null)
 
-const categoriesPromise = await fetch('http://mailanhomebakery.local/wp-json/wp/v2/categories')
+const categoriesPromise = await fetch('https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/categories')
 const categories = await categoriesPromise.json()
 
 const mappedCat = categories.filter((cat) => cat.name != 'Uncategorized').map((cat) => {

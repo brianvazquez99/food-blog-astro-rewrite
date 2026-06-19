@@ -2,13 +2,13 @@
 import { Image } from "astro:assets"
 
 
-const postsPromise = await fetch(`http://mailanhomebakery.local/wp-json/wp/v2/recipe?per_page=3`)
+const postsPromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts?per_page=3`)
 const posts = await postsPromise.json()
 
 const postsWithImages = await Promise.all(
     posts?.map(async (element:any) => {
         if (element.featured_media != null) {
-            const featuredImagePromise = await fetch(`http://mailanhomebakery.local/wp-json/wp/v2/media/${element.featured_media}`)
+            const featuredImagePromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${element.featured_media}`)
             const featuredImageJson = await featuredImagePromise.json()
             console.log(featuredImageJson.guid?.rendered)
             if (featuredImageJson) {

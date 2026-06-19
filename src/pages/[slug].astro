@@ -6,7 +6,7 @@ import astroConfig from "../../astro.config.mjs";
 
 export const getStaticPaths = (async () => {
   const blogsPromise = await fetch(
-    `http://mailanhomebakery.local/wp-json/wp/v2/recipe`,
+    `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts`,
   );
   const blogsJson = await blogsPromise.json();
   console.log("blogs", blogsJson);
@@ -14,7 +14,7 @@ export const getStaticPaths = (async () => {
     blogsJson.map(async (blog: any) => {
       if (blog.featured_media != null) {
         const featuredImagePromise = await fetch(
-          `http://mailanhomebakery.local/wp-json/wp/v2/media/${blog.featured_media}`,
+          `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${blog.featured_media}`,
         );
         const featuredImageJson = await featuredImagePromise.json();
         console.log(featuredImageJson.guid?.rendered);
@@ -146,8 +146,8 @@ const {
           content="https://mailan-home-bakery.onrender.com/api/getThumbnail/{{ .ID }}"
         />
 
-        <div id="body" class="flex flex-col gap-3 p-2">
-          <div class="w-full m-0 p-10" itemprop="articleBody">
+        <div id="body" class="flex flex-col items-center gap-3 p-2">
+          <div class="w-full m-0 p-10 prose prose-lg" itemprop="articleBody">
             <Fragment set:html={content} />
           </div>
           <div
@@ -240,14 +240,14 @@ const {
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-2 flex-1">
               <div class="flex flex-col p-2">
-                <span class="text-xl font-semibold text-slate-800"
+                <span class="text-xl font-semibold "
                   >Ingredients</span
                 >
-                <div class="cms-content" set:html={ingredients} />
+                <div class="cms-content prose prose-lg" set:html={ingredients} />
               </div>
               <div class="flex flex-col p-2">
-                <span class="text-xl font-semibold">Instructions</span>
-                <div class="cms-content" set:html={instructions} />
+                <span class="text-xl font-semibold ">Instructions</span>
+                <div class="cms-content prose prose-lg" set:html={instructions} />
               </div>
             </div>
           </div>
@@ -257,13 +257,5 @@ const {
   </main>
 </Layout>
 <style>
-  :global(.cms-content ul) {
-    list-style-type: disc !important;
-    padding-left: 1.5rem;
-  }
 
-  :global(.cms-content ol) {
-    list-style-type: decimal !important;
-    padding-left: 1.5rem;
-  }
 </style>
