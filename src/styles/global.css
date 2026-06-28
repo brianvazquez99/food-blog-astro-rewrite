@@ -17,6 +17,14 @@ animation: slideDown 0.35s ease-out forwards;
 }
 
 
+@theme {
+  --font-sans: "Poppins", sans-serif;
+
+  /* This makes the typography plugin use Poppins too */
+  --tw-prose-font-sans: var(--font-sans);
+}
+
+
 /* From Uiverse.io by ahmedyasserdev */
 .burger {
   display: inline-block;

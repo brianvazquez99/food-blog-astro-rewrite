@@ -9,7 +9,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   integrations: [svelte()],
 image: {
- domains:["mailanhomebakery.local"]
+ domains:["https://gold-toad-177179.hostingersite.com"]
 },
   vite: {
     plugins: [tailwindcss()]
