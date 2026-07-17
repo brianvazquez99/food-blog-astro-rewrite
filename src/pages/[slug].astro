@@ -34,6 +34,7 @@ export const getStaticPaths = (async () => {
           ingredients: blog.acf.ingredients,
           prep_time: blog.acf.prep_time,
           cook_time: blog.acf.cook_time,
+          slug:blog.slug
         },
       };
     }),
@@ -51,6 +52,7 @@ const {
   ingredients,
   prep_time,
   cook_time,
+  slug
 } = Astro.props;
 ---
 
@@ -80,7 +82,17 @@ const {
   }
 </style>
 
+
 <Layout>
+  <meta slot="head" name="description" content={title}>
+  <meta slot="head" name="robots" content="index, follow">
+  <link slot="head" rel="canonical" href={"https://mailanhomebakery.com/" + slug}>
+
+  <meta slot="head" property="og:title" content={title}>
+  <meta slot="head" property="og:description" content={title}>
+  <meta slot="head" property="og:image" content={image_url}>
+  <meta slot="head" property="og:url" content={"https://mailanhomebakery.com/" + slug}>
+  <meta slot="head" property="og:type" content="article">
   <main class="flex flex-col items-center">
     <div class="container mx-auto">
       <article class="w-full" itemscope itemtype="https://schema.org/Article">
