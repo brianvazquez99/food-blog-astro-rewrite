@@ -89,26 +89,26 @@ let isSearchOpen = $state<boolean>(false)
         <div id="dropdown" class="  bg-white border border-default-medium rounded-base shadow-lg w-44">
           <ul class="p-2 list-none text-sm text-body font-medium" aria-labelledby="dropdownDefaultButton">
             <li
-              class="charcoal text-xl hover:underline transition-all hover:cursor-pointer  title">
+              class="text-[#6E3E6F] font-semibold text-xl hover:underline transition-all hover:cursor-pointer  title">
               <a  href="/">
 
                 Home
             </a>
             </li>
-            <li class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
+            <li class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
               <a class:active={pathName.includes('about')} target="_self" href="/about">
                 About
               </a>
             </li>
             <li
-              class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
+              class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
               <a class:active={pathName.includes('recipes')} href="/recipes">
                 Recipes
 
             </a>
             </li>
        <li
-              class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
+              class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
               <a class:active={pathName.includes('contact')} href="/contact">
 
                 Contact
@@ -155,7 +155,7 @@ let isSearchOpen = $state<boolean>(false)
               </a>
             </li>
             <li on:click="{(event) => toggleSearch(event)}"
-              class="flex items-center gap-1 charcoal hover:cursor-pointer ">
+              class="flex items-center gap-1 text-[#6E3E6F] font-semibold hover:cursor-pointer ">
               <svg width="25px" height="25px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000">
                 <g id="SVGRepo_iconCarrier">
                   <defs>
@@ -183,25 +183,25 @@ let isSearchOpen = $state<boolean>(false)
 
     <ul class="hidden list-none lg:flex lg:justify-between lg:w-1/2 lg:title lg:items-center lg:me-6">
       <li
-        class="charcoal text-xl hover:underline transition-all hover:cursor-pointer  title">
+        class="text-[#6E3E6F] font-semibold text-xl hover:underline transition-all hover:cursor-pointer  title">
         <a  href="/">
             Home
         </a>
     </li>
-      <li class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
+      <li class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
         <a class:active={pathName.includes('about')} target="_self" href="/about">
           About
         </a>
       </li>
       <li
-        class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
+        class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
         <a class:active={pathName.includes('recipes')} href="/recipes">
                 Recipes
 
             </a>
     </li>
        <li
-              class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
+              class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
               <a class:active={pathName.includes('contact')} href="/contact">
 
                 Contact
@@ -268,7 +268,7 @@ let isSearchOpen = $state<boolean>(false)
           </svg>
         </a>
       </li>
-      <li on:click={(e) => {toggleSearch(e); console.log("hi")}} class="flex items-center gap-1 charcoal hover:cursor-pointer ">
+      <li on:click={(e) => {toggleSearch(e); console.log("hi")}} class="flex items-center gap-1 text-[#6E3E6F] font-semibold hover:cursor-pointer ">
         <svg  width="25px" height="25px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000">
           <g id="SVGRepo_iconCarrier">
             <defs>
