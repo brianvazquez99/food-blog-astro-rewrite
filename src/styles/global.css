@@ -58,3 +58,11 @@ animation: slideDown 0.35s ease-out forwards;
 #burger-checkbox:checked + .burger span:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
 }
+
+.active {
+  text-decoration: #6E3E6F underline;
+}
+
+@view-transition {
+  navigation: auto;
+}

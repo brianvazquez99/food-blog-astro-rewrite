@@ -1,10 +1,9 @@
 <script lang="ts">
-import logo from '../assets/mailan circular logo.avif'
-  import { onMount, onDestroy } from 'svelte';
+import { onMount } from 'svelte';
+import logo from '../assets/mailan circular logo.avif';
 
 
-
-let {posts} = $props()
+let {posts, pathName} = $props()
 let searchResults = $state([])
 let searchString = $state('')
 let hamburgerOpen = $state<boolean>(false)
@@ -65,6 +64,7 @@ let isSearchOpen = $state<boolean>(false)
 
 </script>
 
+
  <nav style="background-color: #FAF3E3;"
     class="flex border-b border-b-gray-300 justify-between  items-center relative  px-8 py-4">
 
@@ -90,26 +90,26 @@ let isSearchOpen = $state<boolean>(false)
           <ul class="p-2 list-none text-sm text-body font-medium" aria-labelledby="dropdownDefaultButton">
             <li
               class="charcoal text-xl hover:underline transition-all hover:cursor-pointer  title">
-              <a href="/">
+              <a  href="/">
 
                 Home
             </a>
             </li>
             <li class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
-              <a target="_self" href="/about">
+              <a class:active={pathName.includes('about')} target="_self" href="/about">
                 About
               </a>
             </li>
             <li
               class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
-              <a href="/recipes">
+              <a class:active={pathName.includes('recipes')} href="/recipes">
                 Recipes
 
             </a>
             </li>
        <li
               class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
-              <a href="/contact">
+              <a class:active={pathName.includes('contact')} href="/contact">
 
                 Contact
               </a>
@@ -184,25 +184,25 @@ let isSearchOpen = $state<boolean>(false)
     <ul class="hidden list-none lg:flex lg:justify-between lg:w-1/2 lg:title lg:items-center lg:me-6">
       <li
         class="charcoal text-xl hover:underline transition-all hover:cursor-pointer  title">
-        <a href="/">
+        <a  href="/">
             Home
         </a>
     </li>
       <li class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
-        <a target="_self" href="/about">
+        <a class:active={pathName.includes('about')} target="_self" href="/about">
           About
         </a>
       </li>
       <li
         class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
-        <a href="/recipes">
+        <a class:active={pathName.includes('recipes')} href="/recipes">
                 Recipes
 
             </a>
     </li>
        <li
               class="hover:underline text-xl transition-all hover:cursor-pointer charcoal title">
-              <a href="/contact">
+              <a class:active={pathName.includes('contact')} href="/contact">
 
                 Contact
               </a>

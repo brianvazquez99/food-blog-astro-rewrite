@@ -30,9 +30,10 @@ const postsWithImages = await Promise.all(
 
 )
 const filteredPosts = postsWithImages.filter(element  => element != null)
+
 	---
 <!doctype html>
-<html lang="en">
+<html lang="en"  >
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -52,11 +53,11 @@ const filteredPosts = postsWithImages.filter(element  => element != null)
 
   gtag('config', 'G-STN7RFEJQF');
 </script>
-	<body class="min-h-screen flex flex-col">
-		<Nav client:load posts={filteredPosts}/></Nav>
+	<body  class="min-h-screen flex flex-col">
+		<Nav client:load posts={filteredPosts} pathName={Astro.url.pathname}/></Nav>
 		<main style="background-color: #FAF3E3;"  class="flex-1">
 
-			<slot />
+			<slot  />
 		</main>
 		<footer class="bg-black w-full text-white font-semibold flex gap-2 items-center p-4">
 	  <div>
