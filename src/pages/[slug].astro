@@ -73,7 +73,7 @@ const {
         content={"https://mailanhomebakery.com/" + slug}
     />
     <meta slot="head" property="og:type" content="article" />
-    <main class="flex flex-col items-center">
+    <main class="recipe-page flex flex-col items-center">
         <div class="container mx-auto">
             <article
                 class="w-full"
@@ -628,20 +628,50 @@ const {
         }
     }
 
+    @page {
+        margin: 0.5in;
+    }
+
     @media print {
-        :global(body *) {
-            visibility: hidden !important;
+        :global(html),
+        :global(body) {
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
         }
 
-        .printable-area,
-        .printable-area :global(*) {
-            visibility: visible !important;
+        :global(body) {
+            display: block !important;
+        }
+
+        :global(body > nav),
+        :global(body > footer) {
+            display: none !important;
+        }
+
+        :global(body > main),
+        .recipe-page,
+        .recipe-page > :global(.container),
+        .recipe-page article,
+        #body {
+            display: block !important;
+            width: 100% !important;
+            max-width: none !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+        }
+
+        .recipe-page article > :not(#body),
+        #body > :not(.printable-area) {
+            display: none !important;
         }
 
         .printable-area {
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: static;
+            display: block;
             width: 100%;
             max-width: none;
             overflow: visible;
@@ -649,13 +679,15 @@ const {
             border-radius: 0;
             background: white;
             box-shadow: none;
+            print-color-adjust: exact;
         }
 
         .recipe-header {
             display: block;
             border-bottom: 2px solid #2c1a0e;
             background: white;
-            padding: 0 0 1rem;
+            padding: 0 0 0.75rem;
+            break-after: avoid-page;
         }
 
         .recipe-header::after,
@@ -664,31 +696,55 @@ const {
             display: none;
         }
 
+        .recipe-heading h2 {
+            font-size: 22pt;
+        }
+
         .recipe-eyebrow {
+            margin-bottom: 0.2rem;
             color: #2c1a0e;
         }
 
         .recipe-toolbar {
-            margin-top: 1rem;
+            margin-top: 0.75rem;
+        }
+
+        .recipe-times {
+            display: flex;
+            gap: 0.5rem;
         }
 
         .time-card {
+            min-width: 0;
             border-color: #999;
+            border-radius: 0.4rem;
             background: white;
+            padding: 0.45rem 0.65rem;
         }
 
         .time-icon {
+            width: 1.75rem;
+            height: 1.75rem;
             border: 1px solid #2c1a0e;
             background: white;
             color: #2c1a0e;
         }
 
+        .time-card dt {
+            font-size: 7pt;
+        }
+
+        .time-card dd {
+            font-size: 9pt;
+        }
+
         .recipe-grid {
-            grid-template-columns: minmax(14rem, 0.75fr) minmax(0, 1.4fr);
+            display: grid;
+            grid-template-columns: minmax(12rem, 0.75fr) minmax(0, 1.4fr);
         }
 
         .recipe-panel {
-            padding: 1.25rem 1rem;
+            padding: 0.9rem 0.8rem;
         }
 
         .ingredients-panel,
@@ -700,27 +756,53 @@ const {
             border-right-color: #999;
         }
 
+        .section-heading {
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            break-after: avoid-page;
+        }
+
+        .section-heading h3 {
+            font-size: 14pt;
+        }
+
+        .section-number {
+            width: 1.6rem;
+            height: 1.6rem;
+            border: 1px solid #2c1a0e;
+            background: white;
+        }
+
         .recipe-content {
-            font-size: 10pt;
-            line-height: 1.45;
+            font-size: 9.5pt;
+            line-height: 1.4;
         }
 
         .section-heading,
         .recipe-content :global(li),
         .recipe-content :global(p) {
-            break-inside: avoid;
+            break-inside: avoid-page;
+        }
+
+        .ingredients-content :global(li) {
+            padding-top: 0.4rem;
+            padding-bottom: 0.4rem;
+        }
+
+        .ingredients-content :global(li::before) {
+            top: 0.9rem;
         }
 
         .instructions-content :global(ol > li) {
-            padding-bottom: 0.9rem;
+            padding-bottom: 0.75rem;
         }
 
         .instructions-content :global(ol > li + li) {
-            padding-top: 0.9rem;
+            padding-top: 0.75rem;
         }
 
         .instructions-content :global(ol > li + li::before) {
-            top: 0.9rem;
+            top: 0.75rem;
         }
     }
 </style>
