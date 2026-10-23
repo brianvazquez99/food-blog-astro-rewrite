@@ -2,272 +2,725 @@
 import type { GetStaticPaths } from "astro";
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
-import astroConfig from "../../astro.config.mjs";
 
 export const getStaticPaths = (async () => {
-  const blogsPromise = await fetch(
-    `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts`,
-  );
-  const blogsJson = await blogsPromise.json();
-  console.log("blogs", blogsJson);
-  const paths = await Promise.all(
-    blogsJson.map(async (blog: any) => {
-      if (blog.featured_media != null) {
-        const featuredImagePromise = await fetch(
-          `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${blog.featured_media}`,
-        );
-        const featuredImageJson = await featuredImagePromise.json();
-        console.log(featuredImageJson.guid?.rendered);
-        if (featuredImageJson) {
-          blog["image_url"] = featuredImageJson.guid?.rendered;
-        }
-      }
+    const blogsPromise = await fetch(
+        `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts`,
+    );
+    const blogsJson = await blogsPromise.json();
+    console.log("blogs", blogsJson);
+    const paths = await Promise.all(
+        blogsJson.map(async (blog: any) => {
+            if (blog.featured_media != null) {
+                const featuredImagePromise = await fetch(
+                    `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${blog.featured_media}`,
+                );
+                const featuredImageJson = await featuredImagePromise.json();
+                console.log(featuredImageJson.guid?.rendered);
+                if (featuredImageJson) {
+                    blog["image_url"] = featuredImageJson.guid?.rendered;
+                }
+            }
 
-      return {
-        params: { slug: blog.slug },
-        props: {
-          title: blog.title.rendered,
-          content: blog.content.rendered,
-          image_url: blog.image_url,
-          date_published: blog.date,
-          instructions: blog.acf.instructions,
-          ingredients: blog.acf.ingredients,
-          prep_time: blog.acf.prep_time,
-          cook_time: blog.acf.cook_time,
-          slug:blog.slug
-        },
-      };
-    }),
-  );
-  console.log("paths", paths);
-  return paths.filter((path) => path.props.image_url != null);
+            return {
+                params: { slug: blog.slug },
+                props: {
+                    title: blog.title.rendered,
+                    content: blog.content.rendered,
+                    image_url: blog.image_url,
+                    date_published: blog.date,
+                    instructions: blog.acf.instructions,
+                    ingredients: blog.acf.ingredients,
+                    prep_time: blog.acf.prep_time,
+                    cook_time: blog.acf.cook_time,
+                    slug: blog.slug,
+                },
+            };
+        }),
+    );
+    console.log("paths", paths);
+    return paths.filter((path) => path.props.image_url != null);
 }) satisfies GetStaticPaths;
 
 const {
-  title,
-  content,
-  image_url,
-  date_published,
-  instructions,
-  ingredients,
-  prep_time,
-  cook_time,
-  slug
+    title,
+    content,
+    image_url,
+    date_published,
+    instructions,
+    ingredients,
+    prep_time,
+    cook_time,
+    slug,
 } = Astro.props;
 ---
 
+<Layout>
+    <meta slot="head" name="description" content={title} />
+    <meta slot="head" name="robots" content="index, follow" />
+    <link
+        slot="head"
+        rel="canonical"
+        href={"https://mailanhomebakery.com/" + slug}
+    />
+
+    <meta slot="head" property="og:title" content={title} />
+    <meta slot="head" property="og:description" content={title} />
+    <meta slot="head" property="og:image" content={image_url} />
+    <meta
+        slot="head"
+        property="og:url"
+        content={"https://mailanhomebakery.com/" + slug}
+    />
+    <meta slot="head" property="og:type" content="article" />
+    <main class="flex flex-col items-center">
+        <div class="container mx-auto">
+            <article
+                class="w-full"
+                itemscope
+                itemtype="https://schema.org/Article"
+            >
+                <h1
+                    id="title"
+                    class="title text-center text-4xl my-3"
+                    itemprop="headline"
+                    set:html={title}
+                />
+                <div id="thumbnail" class="flex justify-center">
+                    <Image
+                        fetchpriority="high"
+                        src={image_url}
+                        alt={title + " thumbnail"}
+                        class="shadow rounded max-w-full h-auto"
+                        itemprop="image"
+                        height="500"
+                        width="500"
+                    />
+                </div>
+
+                <div class="mt-4 mb-6 flex justify-center">
+                    <a
+                        href="#recipe"
+                        class="inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-[#6E3E6F] bg-[#E4B52E] px-4 py-2.5 font-bold leading-none text-[#2C1A0E] no-underline shadow-[0_3px_0_#6E3E6F] transition-[transform,box-shadow,background-color] duration-75 ease-out hover:-translate-y-px hover:bg-[#EDC54F] hover:shadow-[0_4px_0_#6E3E6F] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#6E3E6F] motion-reduce:transition-none"
+                    >
+                        Jump to recipe
+                        <svg
+                            class="size-4.5 fill-none stroke-current stroke-[2.25] [stroke-linecap:round] [stroke-linejoin:round]"
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                        >
+                            <path d="m7 10 5 5 5-5M7 5l5 5 5-5" />
+                        </svg>
+                    </a>
+                </div>
+
+                <meta itemprop="datePublished" content={date_published} />
+
+                <div id="body" class="flex flex-col items-center gap-3 p-2">
+                    <div
+                        class="w-full m-0 p-10 prose prose-lg"
+                        itemprop="articleBody"
+                    >
+                        <Fragment set:html={content} />
+                    </div>
+                    <section
+                        id="recipe"
+                        class="recipe-card printable-area"
+                        itemscope
+                        itemtype="https://schema.org/Recipe"
+                        aria-labelledby="recipe-title"
+                    >
+                        <meta itemprop="image" content={image_url} />
+
+                        <header class="recipe-header">
+                            <div class="recipe-heading">
+                                <span class="recipe-eyebrow">Recipe</span>
+                                <h2
+                                    id="recipe-title"
+                                    itemprop="name"
+                                    set:html={title}
+                                />
+                            </div>
+
+                            <div class="recipe-toolbar">
+                                <dl
+                                    class="recipe-times"
+                                    aria-label="Recipe timing"
+                                >
+                                    <div class="time-card">
+                                        <span
+                                            class="time-icon"
+                                            aria-hidden="true"
+                                        >
+                                            <svg viewBox="0 0 24 24">
+                                                <circle cx="12" cy="13" r="8" />
+                                                <path d="M12 9v4l2.5 1.5M9 3h6" />
+                                            </svg>
+                                        </span>
+                                        <div>
+                                            <dt>Prep time</dt>
+                                            <dd set:html={prep_time} />
+                                        </div>
+                                    </div>
+                                    <div class="time-card">
+                                        <span
+                                            class="time-icon"
+                                            aria-hidden="true"
+                                        >
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M7 20h10M8 17h8M12 3c2 3-1 4 1 7 1.5 2 4 1.5 4 5a5 5 0 0 1-10 0c0-2 1-3.5 3-5-.25 2 1 3 2 3 2-2-1-5 0-10Z" />
+                                            </svg>
+                                        </span>
+                                        <div>
+                                            <dt>Cook time</dt>
+                                            <dd set:html={cook_time} />
+                                        </div>
+                                    </div>
+                                </dl>
+
+                                <button
+                                    class="print-button"
+                                    type="button"
+                                    data-print-recipe
+                                >
+                                    <svg aria-hidden="true" viewBox="0 0 24 24">
+                                        <path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                        <path d="M7 14h10v6H7z" />
+                                    </svg>
+                                    Print recipe
+                                </button>
+                            </div>
+                        </header>
+
+                        <div class="recipe-grid">
+                            <section
+                                class="recipe-panel ingredients-panel"
+                                aria-labelledby="ingredients-title"
+                            >
+                                <div class="section-heading">
+                                    <span
+                                        class="section-number"
+                                        aria-hidden="true"
+                                    >
+                                        1
+                                    </span>
+                                    <div>
+                                        <h3 id="ingredients-title">
+                                            Ingredients
+                                        </h3>
+                                        <p>
+                                            Gather everything before you begin.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="recipe-content ingredients-content"
+                                    set:html={ingredients}
+                                />
+                            </section>
+
+                            <section
+                                class="recipe-panel instructions-panel"
+                                aria-labelledby="instructions-title"
+                            >
+                                <div class="section-heading">
+                                    <span
+                                        class="section-number"
+                                        aria-hidden="true"
+                                    >
+                                        2
+                                    </span>
+                                    <div>
+                                        <h3 id="instructions-title">
+                                            Instructions
+                                        </h3>
+                                        <p>
+                                            Follow each step in order for the
+                                            best result.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="recipe-content instructions-content"
+                                    itemprop="recipeInstructions"
+                                    set:html={instructions}
+                                />
+                            </section>
+                        </div>
+                    </section>
+                </div>
+            </article>
+        </div>
+    </main>
+</Layout>
+
 <script>
-  function print() {
-    window.print();
-  }
+    document.querySelectorAll("[data-print-recipe]").forEach((button) => {
+        button.addEventListener("click", () => window.print());
+    });
 </script>
 
 <style>
-  @media print {
-    body *,
-    html {
-      visibility: hidden;
-    }
-    .printable-area,
-    .printable-area * {
-      visibility: visible;
+    .print-button:focus-visible {
+        outline: 3px solid #6e3e6f;
+        outline-offset: 3px;
     }
 
-    /* Move the printable section to the top-left of the physical page */
-    .printable-area {
-      position: absolute;
-      left: 0;
-      top: 0;
+    .recipe-card {
+        width: 100%;
+        max-width: 72rem;
+        scroll-margin-top: 1.5rem;
+        overflow: hidden;
+        border: 1px solid rgb(110 62 111 / 22%);
+        border-radius: 1.25rem;
+        background: #fffdf8;
+        color: #2c1a0e;
+        box-shadow: 0 18px 45px rgb(44 26 14 / 12%);
     }
-  }
-</style>
 
+    .recipe-header {
+        position: relative;
+        display: grid;
+        gap: 1.5rem;
+        overflow: hidden;
+        border-bottom: 1px solid rgb(44 26 14 / 15%);
+        background: linear-gradient(135deg, #e4b52e 0%, #f0cd65 100%);
+        padding: clamp(1.5rem, 4vw, 2.75rem);
+    }
 
-<Layout>
-  <meta slot="head" name="description" content={title}>
-  <meta slot="head" name="robots" content="index, follow">
-  <link slot="head" rel="canonical" href={"https://mailanhomebakery.com/" + slug}>
+    .recipe-header::after {
+        position: absolute;
+        right: -3rem;
+        bottom: -5rem;
+        width: 13rem;
+        height: 13rem;
+        border: 2rem solid rgb(255 255 255 / 18%);
+        border-radius: 50%;
+        content: "";
+        pointer-events: none;
+    }
 
-  <meta slot="head" property="og:title" content={title}>
-  <meta slot="head" property="og:description" content={title}>
-  <meta slot="head" property="og:image" content={image_url}>
-  <meta slot="head" property="og:url" content={"https://mailanhomebakery.com/" + slug}>
-  <meta slot="head" property="og:type" content="article">
-  <main class="flex flex-col items-center">
-    <div class="container mx-auto">
-      <article class="w-full" itemscope itemtype="https://schema.org/Article">
-        <h1
-          id="title"
-          class="title text-center text-4xl my-3"
-          itemprop="headline"
-          set:html={title}
-        />
-        <div id="thumbnail" class="flex justify-center">
-          <Image
-            fetchpriority="high"
-            src={image_url}
-            alt={title + " thumbnail"}
-            class="shadow rounded max-w-full h-auto"
-            itemprop="image"
-            height="500"
-            width="500"
-          />
-        </div>
+    .recipe-heading,
+    .recipe-toolbar {
+        position: relative;
+        z-index: 1;
+    }
 
-        <div class="flex justify-center my-2">
-          <button
-            class="hover:cursor-pointer rounded-lg bg-[#E4B52E] font-semibold"
-          >
-            <a
-              href="#recipe"
-              class="flex gap-1 items-center text-[#6E3E6F] title p-2"
-              >Jump To Recipe <svg
-                fill="#6E3E6F"
-                xmlns="http://www.w3.org/2000/svg"
-                width="15px"
-                height="15px"
-                viewBox="0 0 52 52"
-                enable-background="new 0 0 52 52"
-                xml:space="preserve"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                  <g>
-                    <path
-                      d="M40.6,30.4L27.1,44c-0.6,0.6-1.6,0.6-2.2,0L11.4,30.4c-0.6-0.6-0.6-1.6,0-2.2l2.2-2.2 c0.6-0.6,1.6-0.6,2.2,0l9.1,9.4c0.6,0.6,1.6,0.6,2.2,0l9.1-9.3c0.6-0.6,1.6-0.6,2.2,0l2.2,2.2C41.1,28.9,41.1,29.8,40.6,30.4z"
-                    >
-                    </path>
-                    <path
-                      d="M40.6,12.3L27.1,26.1c-0.6,0.6-1.6,0.6-2.2,0L11.4,12.3c-0.6-0.6-0.6-1.6,0-2.2l2.2-2.2 c0.6-0.6,1.6-0.6,2.2,0l9.1,9.4c0.6,0.6,1.6,0.6,2.2,0L36.2,8c0.6-0.6,1.6-0.6,2.2,0l2.2,2.2C41.1,10.8,41.1,11.8,40.6,12.3z"
-                    >
-                    </path>
-                  </g>
-                </g>
-              </svg>
-            </a>
-          </button>
-        </div>
+    .recipe-eyebrow {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        color: #6e3e6f;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
 
-        <!-- <meta itemprop="datePublished" content={date}> -->
-        <meta
-          itemprop="image"
-          content="https://mailan-home-bakery.onrender.com/api/getThumbnail/{{ .ID }}"
-        />
+    .recipe-heading h2 {
+        max-width: 48rem;
+        margin: 0;
+        color: #2c1a0e;
+        font-size: clamp(1.75rem, 4vw, 2.75rem);
+        font-weight: 800;
+        line-height: 1.15;
+        text-wrap: balance;
+    }
 
-        <div id="body" class="flex flex-col items-center gap-3 p-2">
-          <div class="w-full m-0 p-10 prose prose-lg" itemprop="articleBody">
-            <Fragment set:html={content} />
-          </div>
-          <div
-            id="recipe"
-            class="w-full printable-area rounded shadow border flex flex-col border-gray-300"
-          >
-            <div class="bg-[#E4B52E] rounded-t p-2 flex flex-col gap-2">
-              <span
-                class="text-2xl font-semibold text-[#2C1A0E]"
-                set:html={title}
-              />
-              <div class="flex items-center gap-4">
-                <div class="flex items-center gap-1">
-                  <svg
-                    width="15px"
-                    height="15px"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-                      id="SVGRepo_tracerCarrier"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-                      <path
-                        d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                        stroke="#000000"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"></path>
-                    </g></svg
-                  >
-                  <span class="text-[#2C1A0E]"> Prep</span>
-                  <span
-                    class="text-[#2C1A0E] font-semibold"
-                    set:html={prep_time}
-                  />
-                </div>
-                <div class="flex items-center gap-1">
-                  <svg
-                    width="15px"
-                    height="15px"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-                      id="SVGRepo_tracerCarrier"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-                      <path
-                        d="M16 19.9972C14.8233 20.635 13.4571 21 12 21C7.58172 21 4 17.6439 4 13.504C4 12.3727 4.14916 11.3124 4.40527 10.3284M19.1761 16.8211C19.7036 15.8211 20 14.695 20 13.504C20 9.76257 17.9654 6.83811 16.562 5.44436C16.3017 5.18584 15.8683 5.30006 15.7212 5.63288C14.9742 7.3229 13.4178 9.75607 11.4286 9.75607C10.1975 9.92086 8.31688 8.86844 9.83483 3.64868C9.97151 3.17868 9.46972 2.80113 9.08645 3.11539C8.09335 3.92966 6.95052 5.1206 6 6.64741"
-                        stroke="#1C274C"
-                        stroke-width="1.5"
-                        stroke-linecap="round"></path>
-                    </g></svg
-                  >
-                  <span class="text-[#2C1A0E]"> Cook</span>
-                  <span
-                    class="text-[#2C1A0E] font-semibold"
-                    set:html={cook_time}
-                  />
-                </div>
-                <button
-                  onclick="print()"
-                  class="border hover:cursor-pointer text-[#2C1A0E] flex gap-2 items-center  font-semibold rounded px-3 py-1"
-                >
-                  <svg
-                    width="20px"
-                    height="20px"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><g id="SVGRepo_bgCarrier" stroke-whiteidth="0"></g><g
-                      id="SVGRepo_tracerCarrier"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-                      <path
-                        d="M18 16.75H16C15.8011 16.75 15.6103 16.671 15.4697 16.5303C15.329 16.3897 15.25 16.1989 15.25 16C15.25 15.8011 15.329 15.6103 15.4697 15.4697C15.6103 15.329 15.8011 15.25 16 15.25H18C18.3315 15.25 18.6495 15.1183 18.8839 14.8839C19.1183 14.6495 19.25 14.3315 19.25 14V10C19.25 9.66848 19.1183 9.35054 18.8839 9.11612C18.6495 8.8817 18.3315 8.75 18 8.75H6C5.66848 8.75 5.35054 8.8817 5.11612 9.11612C4.8817 9.35054 4.75 9.66848 4.75 10V14C4.75 14.3315 4.8817 14.6495 5.11612 14.8839C5.35054 15.1183 5.66848 15.25 6 15.25H8C8.19891 15.25 8.38968 15.329 8.53033 15.4697C8.67098 15.6103 8.75 15.8011 8.75 16C8.75 16.1989 8.67098 16.3897 8.53033 16.5303C8.38968 16.671 8.19891 16.75 8 16.75H6C5.27065 16.75 4.57118 16.4603 4.05546 15.9445C3.53973 15.4288 3.25 14.7293 3.25 14V10C3.25 9.27065 3.53973 8.57118 4.05546 8.05546C4.57118 7.53973 5.27065 7.25 6 7.25H18C18.7293 7.25 19.4288 7.53973 19.9445 8.05546C20.4603 8.57118 20.75 9.27065 20.75 10V14C20.75 14.7293 20.4603 15.4288 19.9445 15.9445C19.4288 16.4603 18.7293 16.75 18 16.75Z"
-                        fill="black"></path>
-                      <path
-                        d="M16 8.75C15.8019 8.74741 15.6126 8.66756 15.4725 8.52747C15.3324 8.38737 15.2526 8.19811 15.25 8V4.75H8.75V8C8.75 8.19891 8.67098 8.38968 8.53033 8.53033C8.38968 8.67098 8.19891 8.75 8 8.75C7.80109 8.75 7.61032 8.67098 7.46967 8.53033C7.32902 8.38968 7.25 8.19891 7.25 8V4.5C7.25 4.16848 7.3817 3.85054 7.61612 3.61612C7.85054 3.3817 8.16848 3.25 8.5 3.25H15.5C15.8315 3.25 16.1495 3.3817 16.3839 3.61612C16.6183 3.85054 16.75 4.16848 16.75 4.5V8C16.7474 8.19811 16.6676 8.38737 16.5275 8.52747C16.3874 8.66756 16.1981 8.74741 16 8.75Z"
-                        fill="black"></path>
-                      <path
-                        d="M15.5 20.75H8.5C8.16848 20.75 7.85054 20.6183 7.61612 20.3839C7.3817 20.1495 7.25 19.8315 7.25 19.5V12.5C7.25 12.1685 7.3817 11.8505 7.61612 11.6161C7.85054 11.3817 8.16848 11.25 8.5 11.25H15.5C15.8315 11.25 16.1495 11.3817 16.3839 11.6161C16.6183 11.8505 16.75 12.1685 16.75 12.5V19.5C16.75 19.8315 16.6183 20.1495 16.3839 20.3839C16.1495 20.6183 15.8315 20.75 15.5 20.75ZM8.75 19.25H15.25V12.75H8.75V19.25Z"
-                        fill="black"></path>
-                    </g></svg
-                  >
-                  Print
-                </button>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 gap-2 md:grid-cols-2 flex-1">
-              <div class="flex flex-col p-2">
-                <span class="text-xl font-semibold "
-                  >Ingredients</span
-                >
-                <div class="cms-content prose prose-lg" set:html={ingredients} />
-              </div>
-              <div class="flex flex-col p-2">
-                <span class="text-xl font-semibold ">Instructions</span>
-                <div class="cms-content prose prose-lg" set:html={instructions} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-    </div>
-  </main>
-</Layout>
-<style>
+    .recipe-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        justify-content: space-between;
+        gap: 1rem;
+    }
 
+    .recipe-times {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin: 0;
+    }
+
+    .time-card {
+        display: flex;
+        min-width: 9.5rem;
+        align-items: center;
+        gap: 0.75rem;
+        border: 1px solid rgb(44 26 14 / 14%);
+        border-radius: 0.875rem;
+        background: rgb(255 253 248 / 78%);
+        padding: 0.75rem 0.875rem;
+    }
+
+    .time-icon {
+        display: grid;
+        width: 2.25rem;
+        height: 2.25rem;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 50%;
+        background: #6e3e6f;
+        color: white;
+    }
+
+    .time-icon svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .time-card dt {
+        color: #6b5849;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+
+    .time-card dd {
+        margin: 0.15rem 0 0;
+        color: #2c1a0e;
+        font-size: 0.95rem;
+        font-weight: 800;
+        line-height: 1.25;
+    }
+
+    .print-button {
+        display: inline-flex;
+        min-height: 3.25rem;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        gap: 0.625rem;
+        border: 2px solid #6e3e6f;
+        border-radius: 0.875rem;
+        background: #6e3e6f;
+        padding: 0.75rem 1.125rem;
+        color: white;
+        font: inherit;
+        font-weight: 750;
+        line-height: 1;
+        cursor: pointer;
+        transition:
+            background-color 150ms ease,
+            color 150ms ease,
+            transform 150ms ease;
+    }
+
+    .print-button:hover {
+        background: #fffdf8;
+        color: #6e3e6f;
+        transform: translateY(-1px);
+    }
+
+    .print-button svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .recipe-grid {
+        display: grid;
+        grid-template-columns: minmax(17rem, 0.8fr) minmax(0, 1.35fr);
+    }
+
+    .recipe-panel {
+        min-width: 0;
+        padding: clamp(1.5rem, 4vw, 2.75rem);
+    }
+
+    .ingredients-panel {
+        border-right: 1px solid rgb(110 62 111 / 16%);
+        background: #f8f0f6;
+    }
+
+    .instructions-panel {
+        background: #fffdf8;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.875rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid rgb(110 62 111 / 18%);
+    }
+
+    .section-number {
+        display: grid;
+        width: 2rem;
+        height: 2rem;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 50%;
+        background: #e4b52e;
+        color: #2c1a0e;
+        font-size: 0.875rem;
+        font-weight: 800;
+    }
+
+    .section-heading h3 {
+        margin: 0;
+        color: #2c1a0e;
+        font-size: clamp(1.35rem, 3vw, 1.75rem);
+        font-weight: 800;
+        line-height: 1.15;
+    }
+
+    .section-heading p {
+        margin: 0.35rem 0 0;
+        color: #735f50;
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+
+    .recipe-content {
+        color: #3d2b20;
+        font-size: 1rem;
+        line-height: 1.75;
+        overflow-wrap: anywhere;
+    }
+
+    .recipe-content :global(ul),
+    .recipe-content :global(ol) {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .recipe-content :global(p),
+    .recipe-content :global(li) {
+        margin: 0;
+    }
+
+    .recipe-content :global(p + p) {
+        margin-top: 1rem;
+    }
+
+    .recipe-content :global(h1),
+    .recipe-content :global(h2),
+    .recipe-content :global(h3),
+    .recipe-content :global(h4) {
+        margin: 1.5rem 0 0.75rem;
+        color: #2c1a0e;
+        font-size: 1.05rem;
+        font-weight: 800;
+        line-height: 1.35;
+    }
+
+    .recipe-content :global(strong) {
+        color: #2c1a0e;
+        font-weight: 750;
+    }
+
+    .ingredients-content :global(li) {
+        position: relative;
+        padding: 0.7rem 0 0.7rem 1.75rem;
+        border-bottom: 1px solid rgb(110 62 111 / 12%);
+    }
+
+    .ingredients-content :global(li:last-child) {
+        border-bottom: 0;
+    }
+
+    .ingredients-content :global(li::before) {
+        position: absolute;
+        top: 1.25rem;
+        left: 0.25rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: #e4b52e;
+        box-shadow: 0 0 0 3px rgb(228 181 46 / 22%);
+        content: "";
+    }
+
+    .instructions-content :global(ol) {
+        counter-reset: recipe-step;
+    }
+
+    .instructions-content :global(ol > li) {
+        position: relative;
+        min-height: 2.5rem;
+        padding: 0 0 1.5rem 3.25rem;
+        counter-increment: recipe-step;
+    }
+
+    .instructions-content :global(ol > li + li) {
+        padding-top: 1.5rem;
+        border-top: 1px solid rgb(44 26 14 / 12%);
+    }
+
+    .instructions-content :global(ol > li::before) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: grid;
+        width: 2.25rem;
+        height: 2.25rem;
+        place-items: center;
+        border-radius: 50%;
+        background: #6e3e6f;
+        color: white;
+        content: counter(recipe-step);
+        font-size: 0.875rem;
+        font-weight: 800;
+    }
+
+    .instructions-content :global(ol > li + li::before) {
+        top: 1.5rem;
+    }
+
+    .instructions-content :global(ul) {
+        margin: 0.75rem 0;
+        padding-left: 1.25rem;
+        list-style: disc;
+    }
+
+    @media (max-width: 767px) {
+        .recipe-card {
+            border-radius: 1rem;
+        }
+
+        .recipe-toolbar,
+        .print-button {
+            width: 100%;
+        }
+
+        .recipe-times {
+            width: 100%;
+        }
+
+        .time-card {
+            min-width: 0;
+            padding: 0.7rem;
+        }
+
+        .recipe-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .ingredients-panel {
+            border-right: 0;
+            border-bottom: 1px solid rgb(110 62 111 / 16%);
+        }
+    }
+
+    @media (max-width: 420px) {
+        .recipe-times {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .print-button {
+            transition: none;
+        }
+    }
+
+    @media print {
+        :global(body *) {
+            visibility: hidden !important;
+        }
+
+        .printable-area,
+        .printable-area :global(*) {
+            visibility: visible !important;
+        }
+
+        .printable-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            max-width: none;
+            overflow: visible;
+            border: 0;
+            border-radius: 0;
+            background: white;
+            box-shadow: none;
+        }
+
+        .recipe-header {
+            display: block;
+            border-bottom: 2px solid #2c1a0e;
+            background: white;
+            padding: 0 0 1rem;
+        }
+
+        .recipe-header::after,
+        .print-button,
+        .section-heading p {
+            display: none;
+        }
+
+        .recipe-eyebrow {
+            color: #2c1a0e;
+        }
+
+        .recipe-toolbar {
+            margin-top: 1rem;
+        }
+
+        .time-card {
+            border-color: #999;
+            background: white;
+        }
+
+        .time-icon {
+            border: 1px solid #2c1a0e;
+            background: white;
+            color: #2c1a0e;
+        }
+
+        .recipe-grid {
+            grid-template-columns: minmax(14rem, 0.75fr) minmax(0, 1.4fr);
+        }
+
+        .recipe-panel {
+            padding: 1.25rem 1rem;
+        }
+
+        .ingredients-panel,
+        .instructions-panel {
+            background: white;
+        }
+
+        .ingredients-panel {
+            border-right-color: #999;
+        }
+
+        .recipe-content {
+            font-size: 10pt;
+            line-height: 1.45;
+        }
+
+        .section-heading,
+        .recipe-content :global(li),
+        .recipe-content :global(p) {
+            break-inside: avoid;
+        }
+
+        .instructions-content :global(ol > li) {
+            padding-bottom: 0.9rem;
+        }
+
+        .instructions-content :global(ol > li + li) {
+            padding-top: 0.9rem;
+        }
+
+        .instructions-content :global(ol > li + li::before) {
+            top: 0.9rem;
+        }
+    }
 </style>
