@@ -1,53 +1,52 @@
-
-
-
 ---
-import { getImage } from "astro:assets"
-import Layout from "../layouts/Layout.astro"
-import Recipes from "../components/recipes.svelte"
+import { getImage } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import Recipes from "../components/recipes.svelte";
 
-
-const postsPromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts`)
-const posts = await postsPromise.json()
+const postsPromise = await fetch(
+    `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts`,
+);
+const posts = await postsPromise.json();
 
 const postsWithImages = await Promise.all(
-    posts?.map(async (element:any) => {
+    posts?.map(async (element: any) => {
         if (element.featured_media != null) {
-            const featuredImagePromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${element.featured_media}`)
-            const featuredImageJson = await featuredImagePromise.json()
-            console.log(featuredImageJson.guid?.rendered)
+            const featuredImagePromise = await fetch(
+                `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${element.featured_media}`,
+            );
+            const featuredImageJson = await featuredImagePromise.json();
+            console.log(featuredImageJson.guid?.rendered);
             if (featuredImageJson && featuredImageJson.guid?.rendered) {
-                element["image_url"] = featuredImageJson.guid?.rendered
-                console.log(element.image_url)
-                const optImage = await getImage({src:element["image_url"], format: "avif", height: 300, width:200 })
-                element["optimized_image"] =  optImage.src
-
+                element["image_url"] = featuredImageJson.guid?.rendered;
+                console.log(element.image_url);
+                const optImage = await getImage({
+                    src: element["image_url"],
+                    format: "avif",
+                    height: 300,
+                    width: 200,
+                });
+                element["optimized_image"] = optImage.src;
             }
-
         }
         if (element.optimized_image != null) {
-
-            return element
+            return element;
         }
-    })
+    }),
+);
+const filteredPosts = postsWithImages.filter((element) => element != null);
 
-)
-const filteredPosts = postsWithImages.filter(element  => element != null)
+const categoriesPromise = await fetch(
+    "https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/categories",
+);
+const categories = await categoriesPromise.json();
 
-const categoriesPromise = await fetch('https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/categories')
-const categories = await categoriesPromise.json()
-
-const mappedCat = categories.filter((cat) => cat.name != 'Uncategorized').map((cat) => {
-    return {id:cat.id, name:cat.name}
-})
-
-
-
+const mappedCat = categories
+    .filter((cat: any) => cat.name != "Uncategorized")
+    .map((cat: any) => {
+        return { id: cat.id, name: cat.name };
+    });
 ---
 
-
-
-
 <Layout>
-<Recipes client:load categories={mappedCat} posts={filteredPosts}/>
+    <Recipes client:load categories={mappedCat} posts={filteredPosts} />
 </Layout>

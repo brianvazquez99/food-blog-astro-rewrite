@@ -1,71 +1,81 @@
 ---
-import { Image } from "astro:assets"
+import { Image } from "astro:assets";
 
-
-const postsPromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts?per_page=3`)
-const posts = await postsPromise.json()
+const postsPromise = await fetch(
+    `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts?per_page=3`,
+);
+const posts = await postsPromise.json();
 
 const postsWithImages = await Promise.all(
-    posts?.map(async (element:any) => {
+    posts?.map(async (element: any) => {
         if (element.featured_media != null) {
-            const featuredImagePromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${element.featured_media}`)
-            const featuredImageJson = await featuredImagePromise.json()
-            console.log(featuredImageJson.guid?.rendered)
+            const featuredImagePromise = await fetch(
+                `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${element.featured_media}`,
+            );
+            const featuredImageJson = await featuredImagePromise.json();
+            console.log(featuredImageJson.guid?.rendered);
             if (featuredImageJson) {
-                element["image_url"] = featuredImageJson.guid?.rendered
-
+                element["image_url"] = featuredImageJson.guid?.rendered;
             }
-
         }
         if (element.image_url != null) {
-
-            return element
+            return element;
         }
-    })
-
-)
-const filteredPosts = postsWithImages.filter(element  => element != null)
-console.log(filteredPosts)
+    }),
+);
+const filteredPosts = postsWithImages.filter((element) => element != null);
+console.log(filteredPosts);
 ---
 
-<div  style="background-color: #FAF3E3;" class="w-full">
-
-    <div class="container mx-auto py-5  w-full">
-
-    <div class="mb-2 w-full mt-10">
-      <div class="text-center mb-4">
-        <span class="text-4xl title text-[#6E3E6F] font-bold">FEATURED RECIPES</span>
-      </div>
-      <div class="flex flex-wrap gap-10 p-3 justify-center">
-        {
-            filteredPosts.map((post:any) => {
-                      return <a  href={'/'+ post.slug} class="flex items-center p-2 gap-2 flex-col hover:cursor-pointer transition-all h-full  rounded-lg">
-              <Image fetchpriority="high" class="h-[300px] w-[200px] object-cover rounded " src={post.image_url} height="200" width="200" alt="thumbnail"/>
-            <div class="text-center" style="width: 200px;">
-              <span class="text-xl p-4 title" set:html={post.title.rendered} ></span>
+<div class="w-full bg-sage-50">
+    <div class="container mx-auto py-5 w-full">
+        <div class="mb-2 w-full mt-10">
+            <div class="text-center mb-4">
+                <span class="text-4xl title text-sage-800 font-bold">
+                    FEATURED RECIPES
+                </span>
             </div>
-          </a>
-            })
-        }
+            <div class="flex flex-wrap gap-10 p-3 justify-center">
+                {filteredPosts.map((post: any) => {
+                    return (
+                        <a
+                            href={"/" + post.slug}
+                            class="flex items-center p-3 gap-2 flex-col h-full rounded-xl transition-colors hover:bg-sage-100 focus-visible:outline-3 focus-visible:outline-sage-700"
+                        >
+                            <Image
+                                fetchpriority="high"
+                                class="h-[300px] w-[200px] object-cover rounded"
+                                src={post.image_url}
+                                height="200"
+                                width="200"
+                                alt="thumbnail"
+                            />
+                            <div class="text-center" style="width: 200px;">
+                                <span
+                                    class="text-xl p-4 title"
+                                    set:html={post.title.rendered}
+                                />
+                            </div>
+                        </a>
+                    );
+                })}
+            </div>
+        </div>
 
-      </div>
-
-
-
-
-
-    </div>
-
-    <div class="w-full h-1/2 flex flex-col px-4 gap-10 justify-center items-center">
-      <span class="text-5xl text-center text-[#6E3E6F] title"> Welcome to Mailan Home Bakery</span>
-      <p class="charcoal title text-center text-2xl">your virtual neighborhood bakery </p>
-      <button  class="py-3  hover:cursor-pointer px-8 rounded-lg bg-[#E4B52E]">
-        <a href="/recipes" class="text-[#6E3E6F] title  text-3xl">START BAKING</a>
-      </button>
-    </div>
-
-
-
-
+        <div class="w-full h-1/2 flex flex-col px-4 gap-10 justify-center items-center">
+            <span class="text-5xl text-center text-sage-800 title">
+                {" "}
+                Welcome to Mailan Home Bakery
+            </span>
+            <p class="text-cocoa title text-center text-2xl">
+                your virtual neighborhood bakery
+            </p>
+            <a
+                href="/recipes"
+                class="rounded-lg bg-sage-700 px-8 py-3 text-3xl font-semibold text-white transition-colors hover:bg-sage-800 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-sage-700"
+            >
+                START BAKING
+            </a>
+        </div>
     </div>
 </div>

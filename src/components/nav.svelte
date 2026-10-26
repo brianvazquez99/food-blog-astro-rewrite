@@ -65,8 +65,7 @@ let isSearchOpen = $state<boolean>(false)
 </script>
 
 
- <nav style="background-color: #FAF3E3;"
-    class="flex border-b border-b-gray-300 justify-between  items-center relative  px-8 py-4">
+ <nav class="relative flex items-center justify-between border-b border-sage-200 bg-sage-100 px-8 py-4">
 
     <div  class="hover:cursor-pointer">
       <img src="{logo.src}" height="65px" width="65px" alt="logo">
@@ -86,33 +85,19 @@ let isSearchOpen = $state<boolean>(false)
       {#if hamburgerOpen}
       <div class="absolute z-100 bottom-[-90%] right-[415%] w-full h-full ">
         <!-- Dropdown menu -->
-        <div id="dropdown" class="  bg-white border border-default-medium rounded-base shadow-lg w-44">
+        <div id="dropdown" class="w-44 rounded-lg border border-sage-200 bg-cream shadow-lg">
           <ul class="p-2 list-none text-sm text-body font-medium" aria-labelledby="dropdownDefaultButton">
-            <li
-              class="text-[#6E3E6F] font-semibold text-xl hover:underline transition-all hover:cursor-pointer  title">
-              <a  href="/">
-
-                Home
-            </a>
+            <li class="text-xl font-semibold text-sage-800 transition-colors hover:text-sage-600 hover:underline title">
+              <a href="/">Home</a>
             </li>
-            <li class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
-              <a class:active={pathName.includes('about')} target="_self" href="/about">
-                About
-              </a>
+            <li class="text-xl font-semibold text-sage-800 transition-colors hover:text-sage-600 hover:underline title">
+              <a class:active={pathName.includes('about')} target="_self" href="/about">About</a>
             </li>
-            <li
-              class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
-              <a class:active={pathName.includes('recipes')} href="/recipes">
-                Recipes
-
-            </a>
+            <li class="text-xl font-semibold text-sage-800 transition-colors hover:text-sage-600 hover:underline title">
+              <a class:active={pathName.includes('recipes')} href="/recipes">Recipes</a>
             </li>
-       <li
-              class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
-              <a class:active={pathName.includes('contact')} href="/contact">
-
-                Contact
-              </a>
+            <li class="text-xl font-semibold text-sage-800 transition-colors hover:text-sage-600 hover:underline title">
+              <a class:active={pathName.includes('contact')} href="/contact">Contact</a>
             </li>               <li class="flex gap-2">
               <a aria-label="facebook" href="https://www.facebook.com/people/Mailan-Home-Bakery/61555549815641/#" target="_blank">
                 <svg width="25px" height="25px" viewBox="0 0 24 24" fill="#3B2F2F" xmlns="http://www.w3.org/2000/svg">
@@ -155,7 +140,7 @@ let isSearchOpen = $state<boolean>(false)
               </a>
             </li>
             <li on:click="{(event) => toggleSearch(event)}"
-              class="flex items-center gap-1 text-[#6E3E6F] font-semibold hover:cursor-pointer ">
+              class="flex items-center gap-1 font-semibold text-sage-800 hover:cursor-pointer">
               <svg width="25px" height="25px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000">
                 <g id="SVGRepo_iconCarrier">
                   <defs>
@@ -181,32 +166,19 @@ let isSearchOpen = $state<boolean>(false)
 
     </div>
 
-    <ul class="hidden list-none lg:flex lg:justify-between lg:w-1/2 lg:title lg:items-center lg:me-6">
-      <li
-        class="text-[#6E3E6F] font-semibold text-xl hover:underline transition-all hover:cursor-pointer  title">
-        <a  href="/">
-            Home
-        </a>
-    </li>
-      <li class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
-        <a class:active={pathName.includes('about')} target="_self" href="/about">
-          About
-        </a>
+    <ul class="hidden list-none lg:me-6 lg:flex lg:w-1/2 lg:items-center lg:justify-between lg:title">
+      <li class="text-xl font-semibold text-sage-800 transition-colors hover:text-sage-600 hover:underline title">
+        <a href="/">Home</a>
       </li>
-      <li
-        class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
-        <a class:active={pathName.includes('recipes')} href="/recipes">
-                Recipes
-
-            </a>
-    </li>
-       <li
-              class="hover:underline text-xl transition-all hover:cursor-pointer text-[#6E3E6F] font-semibold title">
-              <a class:active={pathName.includes('contact')} href="/contact">
-
-                Contact
-              </a>
-            </li>         <li class="flex gap-2">
+      <li class="text-xl font-semibold text-sage-800 transition-colors hover:text-sage-600 hover:underline title">
+        <a class:active={pathName.includes('about')} target="_self" href="/about">About</a>
+      </li>
+      <li class="text-xl font-semibold text-sage-800 transition-colors hover:text-sage-600 hover:underline title">
+        <a class:active={pathName.includes('recipes')} href="/recipes">Recipes</a>
+      </li>
+      <li class="text-xl font-semibold text-sage-800 transition-colors hover:text-sage-600 hover:underline title">
+        <a class:active={pathName.includes('contact')} href="/contact">Contact</a>
+      </li>         <li class="flex gap-2">
         <a aria-label="facebook" href="https://www.facebook.com/people/Mailan-Home-Bakery/61555549815641/#" target="_blank">
           <svg width="25px" height="25px" viewBox="0 0 24 24" fill="#3B2F2F" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -268,7 +240,7 @@ let isSearchOpen = $state<boolean>(false)
           </svg>
         </a>
       </li>
-      <li on:click={(e) => {toggleSearch(e); console.log("hi")}} class="flex items-center gap-1 text-[#6E3E6F] font-semibold hover:cursor-pointer ">
+      <li on:click={(e) => {toggleSearch(e); console.log("hi")}} class="flex items-center gap-1 font-semibold text-sage-800 hover:cursor-pointer">
         <svg  width="25px" height="25px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000">
           <g id="SVGRepo_iconCarrier">
             <defs>
@@ -290,7 +262,7 @@ let isSearchOpen = $state<boolean>(false)
 
     {#if isSearchOpen}
 
-    <button on:click={(event) => event.stopPropagation()} class="  z-50 rounded-lg shadow-lg absolute flex flex-col max-h-[200px]  bg-white right-0 w-1/2"
+    <button on:click={(event) => event.stopPropagation()} class="absolute right-0 z-50 flex max-h-[200px] w-1/2 flex-col rounded-lg border border-sage-200 bg-cream shadow-lg"
       style=" top:100%">
       <div class="border-b p-2 gap-3 flex items-center w-full">
         <div>

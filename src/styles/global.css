@@ -20,8 +20,44 @@ animation: slideDown 0.35s ease-out forwards;
 @theme {
   --font-sans: "Poppins", sans-serif;
 
+  --color-sage-50: #f6f7f1;
+  --color-sage-100: #e8ede2;
+  --color-sage-200: #d5decc;
+  --color-sage-300: #bbc9ae;
+  --color-sage-400: #9caf88;
+  --color-sage-500: #7f966d;
+  --color-sage-600: #647a54;
+  --color-sage-700: #4f6243;
+  --color-sage-800: #3f4f38;
+  --color-sage-900: #34412f;
+  --color-cream: #fffdf7;
+  --color-honey: #d6aa5d;
+  --color-cocoa: #352f29;
+
   /* This makes the typography plugin use Poppins too */
   --tw-prose-font-sans: var(--font-sans);
+}
+
+:root {
+  --bakery-background: #f6f7f1;
+  --bakery-surface: #fffdf7;
+  --bakery-primary: #4f6243;
+  --bakery-primary-dark: #34412f;
+  --bakery-primary-soft: #e8ede2;
+  --bakery-accent: #d6aa5d;
+  --bakery-accent-light: #e7ca96;
+  --bakery-text: #352f29;
+  --bakery-muted: #6b6258;
+  --bakery-border: rgb(79 98 67 / 20%);
+}
+
+html {
+  background: var(--bakery-background);
+}
+
+body {
+  background: var(--bakery-background);
+  color: var(--bakery-text);
 }
 
 
@@ -36,7 +72,7 @@ animation: slideDown 0.35s ease-out forwards;
   display: block;
   width: 30px;
   height: 3px;
-  background: #333;
+  background: var(--bakery-primary-dark);
   margin: 6px 0;
   transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55),
     opacity 0.3s ease;
@@ -60,7 +96,10 @@ animation: slideDown 0.35s ease-out forwards;
 }
 
 .active {
-  text-decoration: #6E3E6F underline;
+  color: var(--bakery-primary-dark);
+  text-decoration: var(--bakery-primary) underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3rem;
 }
 
 @view-transition {

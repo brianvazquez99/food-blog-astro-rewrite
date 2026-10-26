@@ -1,76 +1,88 @@
-	---
-	import { getImage } from 'astro:assets'
-import Nav from '../components/nav.svelte'
-	import '../styles/global.css'
+---
+import { getImage } from "astro:assets";
+import Nav from "../components/nav.svelte";
+import "../styles/global.css";
 
-
-const postsPromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts`)
-const posts = await postsPromise.json()
+const postsPromise = await fetch(
+    `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/posts`,
+);
+const posts = await postsPromise.json();
 
 const postsWithImages = await Promise.all(
-    posts?.map(async (element:any) => {
+    posts?.map(async (element: any) => {
         if (element.featured_media != null) {
-            const featuredImagePromise = await fetch(`https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${element.featured_media}`)
-            const featuredImageJson = await featuredImagePromise.json()
-            console.log(featuredImageJson.guid?.rendered)
+            const featuredImagePromise = await fetch(
+                `https://gold-toad-177179.hostingersite.com/wp-json/wp/v2/media/${element.featured_media}`,
+            );
+            const featuredImageJson = await featuredImagePromise.json();
+            console.log(featuredImageJson.guid?.rendered);
             if (featuredImageJson && featuredImageJson.guid?.rendered) {
-                element["image_url"] = featuredImageJson.guid?.rendered
-                console.log(element.image_url)
-                const optImage = await getImage({src:element["image_url"], format: "avif", height: 100, width:100 })
-                element["optimized_image"] =  optImage.src
-
+                element["image_url"] = featuredImageJson.guid?.rendered;
+                console.log(element.image_url);
+                const optImage = await getImage({
+                    src: element["image_url"],
+                    format: "avif",
+                    height: 100,
+                    width: 100,
+                });
+                element["optimized_image"] = optImage.src;
             }
-
         }
         if (element.optimized_image != null) {
-
-            return element
+            return element;
         }
-    })
+    }),
+);
+const filteredPosts = postsWithImages.filter((element) => element != null);
+---
 
-)
-const filteredPosts = postsWithImages.filter(element  => element != null)
-
-	---
 <!doctype html>
-<html lang="en"  >
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" href="/mailan circular logo.avif" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Mailan Home Bakery</title>
-		<slot name="head" />
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-	</head>
-	<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-STN7RFEJQF"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" href="/mailan circular logo.avif" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Mailan Home Bakery</title>
+        <slot name="head" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <!-- Google tag (gtag.js) -->
+    <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-STN7RFEJQF"
+    ></script>
+    <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
 
-  gtag('config', 'G-STN7RFEJQF');
-</script>
-	<body  class="min-h-screen flex flex-col">
-		<Nav client:load posts={filteredPosts} pathName={Astro.url.pathname}/></Nav>
-		<main style="background-color: #FAF3E3;"  class="flex-1">
+        gtag("config", "G-STN7RFEJQF");
+    </script>
+    <body class="min-h-screen flex flex-col">
+        <Nav client:load posts={filteredPosts} pathName={Astro.url.pathname} />
+        <main class="flex-1 bg-sage-50">
+            <slot />
+        </main>
+        <footer class="bg-sage-900 w-full text-white font-semibold flex gap-2 items-center p-4">
+            <div>&copy; Mailan Home Bakery</div>
 
-			<slot />
-		</main>
-		<footer class="bg-black w-full text-white font-semibold flex gap-2 items-center p-4">
-	  <div>
-		&copy; Mailan Home Bakery
-	  </div>
-
-		<a class="border-r border-r-white px-2"  href="/privacy-policy">Privacy Policy</a>
-	   <a  class="border-r border-r-white px-2" href="/terms-and-conditions">
-		Terms & Conditions
-	   </a>
-
-
-  </footer>
-	</body>
+            <a class="border-r border-r-white px-2" href="/privacy-policy">
+                Privacy Policy
+            </a>
+            <a
+                class="border-r border-r-white px-2"
+                href="/terms-and-conditions"
+            >
+                Terms & Conditions
+            </a>
+        </footer>
+    </body>
 </html>

@@ -63,18 +63,18 @@ function updateCategoryFilters(category:{id:number, name:string}) {
 
 <style>
   .selected {
-  background-color: #E4B52E;
+  background-color: #4f6243;
   color: white;
 }
 </style>
 
- <div style="background-color: #FAF3E3;">
+ <div class="bg-sage-50">
 
         <div class="h-full w-full flex flex-col gap-10 p-4 container mx-auto">
           <div class="flex flex-col">
               <div class="flex items-center justify-center-safe gap-2">
             <div>
-              <svg fill="#000000" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+              <svg fill="#4F6243" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512.031 512.031" xml:space="preserve" width="75px"
                 height="75px">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -100,22 +100,22 @@ function updateCategoryFilters(category:{id:number, name:string}) {
               </svg>
             </div>
             <div>
-              <span class="text-5xl text-amber-600 title "> Recipes</span>
+              <span class="text-5xl text-sage-800 title "> Recipes</span>
             </div>
 
 
           </div>
             <div class="flex flex-wrap justify-center gap-3 mt-6 px-4">
-              <button class:selected={categoryFilter.length === 0} onclick={() => updateCategoryFilters({id:0, name:'ALL'})}   class="px-6 py-2 rounded-full bg-gray-200  hover:cursor-pointer text-black hover:bg-[#6E3E6F] hover:text-white transition-colors">
+              <button class:selected={categoryFilter.length === 0} onclick={() => updateCategoryFilters({id:0, name:'ALL'})} class="rounded-full border border-sage-300 bg-sage-100 px-6 py-2 text-cocoa transition-colors hover:cursor-pointer hover:bg-sage-700 hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-sage-700">
                 All
               </button>
               {#each categories as category}
-               <button class:selected={categoryFilter.some((cat) => cat.name === category.name)} onclick={() => updateCategoryFilters(category)}  class="px-6 py-2 rounded-full bg-gray-200  hover:cursor-pointer text-black hover:bg-[#6E3E6F] hover:text-white transition-colors">
+               <button class:selected={categoryFilter.some((cat) => cat.name === category.name)} onclick={() => updateCategoryFilters(category)} class="rounded-full border border-sage-300 bg-sage-100 px-6 py-2 text-cocoa transition-colors hover:cursor-pointer hover:bg-sage-700 hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-sage-700">
                 {category.name}
               </button>
               {/each}
               <!-- @for (cat of categories(); track $index) {
-              <button (click)="updateFilter(cat)" [class.selected]="categoryFilter().includes(cat)" class="px-6 py-2 rounded-full bg-gray-200 hover:cursor-pointer text-black hover:bg-[#6E3E6F] hover:text-white transition-colors">
+              <button (click)="updateFilter(cat)" [class.selected]="categoryFilter().includes(cat)" class="px-6 py-2 rounded-full bg-gray-200 hover:cursor-pointer text-black hover:bg-sage-700 hover:text-white transition-colors">
                 {{cat.toUpperCase()}}
               </button>
               } -->
@@ -123,7 +123,7 @@ function updateCategoryFilters(category:{id:number, name:string}) {
 
           </div>
           <div class="flex justify-center my-2">
-            <input bind:value={searchString} id="search" class="rounded-lg bg-white shadow border px-2 py-1 border-gray-400" type="text" placeholder="Search Blogs">
+            <input bind:value={searchString} id="search" class="rounded-lg border border-sage-300 bg-cream px-3 py-2 shadow-sm outline-none focus:border-sage-700 focus:ring-2 focus:ring-sage-200" type="text" placeholder="Search recipes">
           </div>
           </div>
 
@@ -133,7 +133,7 @@ function updateCategoryFilters(category:{id:number, name:string}) {
                     {#each filteredPosts as post  }
 
              <a  transition:fly={{ y: 10, duration: 150 }}
-       href={'/'+ post.slug} class="flex items-center p-2 gap-2 flex-col hover:cursor-pointer transition-all h-full  rounded-lg">
+       href={'/'+ post.slug} class="flex h-full flex-col items-center gap-2 rounded-xl p-3 transition-colors hover:bg-sage-100 focus-visible:outline-3 focus-visible:outline-sage-700">
             <img fetchpriority="high" class="h-[300px] w-[200px] object-cover rounded " src={post.optimized_image} height="300" width="200" alt="thumbnail"/>
           <div class="text-center" style="width: 200px;">
             <span class="text-xl p-4 font-semibold title" >{@html post.title.rendered}</span>

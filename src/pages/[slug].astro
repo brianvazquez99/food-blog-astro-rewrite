@@ -101,7 +101,7 @@ const {
                 <div class="mt-4 mb-6 flex justify-center">
                     <a
                         href="#recipe"
-                        class="inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-[#6E3E6F] bg-[#E4B52E] px-4 py-2.5 font-bold leading-none text-[#2C1A0E] no-underline shadow-[0_3px_0_#6E3E6F] transition-[transform,box-shadow,background-color] duration-75 ease-out hover:-translate-y-px hover:bg-[#EDC54F] hover:shadow-[0_4px_0_#6E3E6F] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#6E3E6F] motion-reduce:transition-none"
+                        class="inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-sage-700 bg-honey px-4 py-2.5 font-bold leading-none text-cocoa no-underline shadow-[0_3px_0_#4F6243] transition-[transform,box-shadow,background-color] duration-75 ease-out hover:-translate-y-px hover:bg-[#E2BD7A] hover:shadow-[0_4px_0_#4F6243] focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-sage-700 motion-reduce:transition-none"
                     >
                         Jump to recipe
                         <svg
@@ -262,7 +262,7 @@ const {
 
 <style>
     .print-button:focus-visible {
-        outline: 3px solid #6e3e6f;
+        outline: 3px solid var(--bakery-primary);
         outline-offset: 3px;
     }
 
@@ -271,11 +271,11 @@ const {
         max-width: 72rem;
         scroll-margin-top: 1.5rem;
         overflow: hidden;
-        border: 1px solid rgb(110 62 111 / 22%);
+        border: 1px solid var(--bakery-border);
         border-radius: 1.25rem;
-        background: #fffdf8;
-        color: #2c1a0e;
-        box-shadow: 0 18px 45px rgb(44 26 14 / 12%);
+        background: var(--bakery-surface);
+        color: var(--bakery-text);
+        box-shadow: 0 18px 45px rgb(53 47 41 / 12%);
     }
 
     .recipe-header {
@@ -283,8 +283,8 @@ const {
         display: grid;
         gap: 1.5rem;
         overflow: hidden;
-        border-bottom: 1px solid rgb(44 26 14 / 15%);
-        background: linear-gradient(135deg, #e4b52e 0%, #f0cd65 100%);
+        border-bottom: 1px solid rgb(53 47 41 / 15%);
+        background: linear-gradient(135deg, #9caf88 0%, #c8d3bc 100%);
         padding: clamp(1.5rem, 4vw, 2.75rem);
     }
 
@@ -309,7 +309,7 @@ const {
     .recipe-eyebrow {
         display: inline-block;
         margin-bottom: 0.5rem;
-        color: #6e3e6f;
+        color: var(--bakery-primary-dark);
         font-size: 0.75rem;
         font-weight: 800;
         letter-spacing: 0.16em;
@@ -359,7 +359,7 @@ const {
         flex: 0 0 auto;
         place-items: center;
         border-radius: 50%;
-        background: #6e3e6f;
+        background: var(--bakery-primary);
         color: white;
     }
 
@@ -397,9 +397,9 @@ const {
         justify-content: center;
         align-self: center;
         gap: 0.625rem;
-        border: 2px solid #6e3e6f;
+        border: 2px solid var(--bakery-primary);
         border-radius: 0.875rem;
-        background: #6e3e6f;
+        background: var(--bakery-primary);
         padding: 0.75rem 1.125rem;
         color: white;
         font: inherit;
@@ -413,8 +413,8 @@ const {
     }
 
     .print-button:hover {
-        background: #fffdf8;
-        color: #6e3e6f;
+        background: var(--bakery-surface);
+        color: var(--bakery-primary);
         transform: translateY(-1px);
     }
 
@@ -439,12 +439,12 @@ const {
     }
 
     .ingredients-panel {
-        border-right: 1px solid rgb(110 62 111 / 16%);
-        background: #f8f0f6;
+        border-right: 1px solid rgb(79 98 67 / 18%);
+        background: var(--bakery-primary-soft);
     }
 
     .instructions-panel {
-        background: #fffdf8;
+        background: var(--bakery-surface);
     }
 
     .section-heading {
@@ -453,7 +453,7 @@ const {
         gap: 0.875rem;
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
-        border-bottom: 2px solid rgb(110 62 111 / 18%);
+        border-bottom: 2px solid rgb(79 98 67 / 18%);
     }
 
     .section-number {
@@ -463,8 +463,8 @@ const {
         flex: 0 0 auto;
         place-items: center;
         border-radius: 50%;
-        background: #e4b52e;
-        color: #2c1a0e;
+        background: var(--bakery-accent);
+        color: var(--bakery-text);
         font-size: 0.875rem;
         font-weight: 800;
     }
@@ -526,7 +526,7 @@ const {
     .ingredients-content :global(li) {
         position: relative;
         padding: 0.7rem 0 0.7rem 1.75rem;
-        border-bottom: 1px solid rgb(110 62 111 / 12%);
+        border-bottom: 1px solid rgb(79 98 67 / 14%);
     }
 
     .ingredients-content :global(li:last-child) {
@@ -540,8 +540,8 @@ const {
         width: 0.5rem;
         height: 0.5rem;
         border-radius: 50%;
-        background: #e4b52e;
-        box-shadow: 0 0 0 3px rgb(228 181 46 / 22%);
+        background: var(--bakery-accent);
+        box-shadow: 0 0 0 3px rgb(214 170 93 / 22%);
         content: "";
     }
 
@@ -570,7 +570,7 @@ const {
         height: 2.25rem;
         place-items: center;
         border-radius: 50%;
-        background: #6e3e6f;
+        background: var(--bakery-primary);
         color: white;
         content: counter(recipe-step);
         font-size: 0.875rem;
@@ -612,7 +612,7 @@ const {
 
         .ingredients-panel {
             border-right: 0;
-            border-bottom: 1px solid rgb(110 62 111 / 16%);
+            border-bottom: 1px solid rgb(79 98 67 / 18%);
         }
     }
 
